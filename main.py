@@ -1,16 +1,20 @@
 import pygame as pg
 from settings import *
+from sprites import *
 
 
 class Game:
 	def __init__(self):
 		pg.init()
+		pg.display.set_caption("GeekSchool Platformer")
 		self.screen = pg.display.set_mode(WINDOW_SIZE)
 		self.clock = pg.time.Clock()
 		self.running = True
 	
 	def new(self):
 		self.all_sprites = pg.sprite.Group()
+		self.player = Player()
+		self.all_sprites.add(self.player)
 		self.run()
 	
 	def run(self):
