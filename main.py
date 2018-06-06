@@ -13,6 +13,11 @@ class Game:
 	
 	def new(self):
 		self.all_sprites = pg.sprite.Group()
+		self.platforms = pg.sprite.Group()
+		for plat in PLATFORM_LIST:
+			p = Platform(*plat)
+			self.all_sprites.add(p)
+			self.platforms.add(p)
 		self.player = Player()
 		self.all_sprites.add(self.player)
 		self.run()
