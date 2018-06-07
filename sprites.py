@@ -4,25 +4,27 @@ from settings import *
 
 
 class Player(pg.sprite.Sprite):
-	def __init__(self):
+	def __init__(self, game):
 		pg.sprite.Sprite.__init__(self)
-		self.image = pg.Surface(PLAYER_SIZE)
-		self.image.fill(RED)
+		self.image = pg.image.load("./images/ball.png")
 		self.rect = self.image.get_rect()
 		self.rect.center = (WIDHT/2, 0)
 		self.pos = Vec2d(self.rect.center)
 		self.vel = Vec2d(0, 0)
 		self.acc = Vec2d(0, 0)
+		self.game = game
 		
 	def update(self):
 		self.acc.x = 0
-		self.acc.y = 0.1
+		self.acc.y = GRAVITY
 		
 		keys = pg.key.get_pressed()
 		if keys[pg.K_LEFT]:
 			self.acc.x = -PLAYER_ACC
 		if keys[pg.K_RIGHT]:
 			self.acc.x = PLAYER_ACC
+		if keys[pg.K_UP]:
+			self.jump()
 	
 		self.acc.x += PLAYER_FRICTION * self.vel.x
 		self.vel += self.acc
@@ -32,13 +34,19 @@ class Player(pg.sprite.Sprite):
 			self.pos.x = WIDHT - PLAYER_WIDTH / 2
 		if self.pos.x - PLAYER_WIDTH / 2 < 0:
 			self.pos.x = PLAYER_WIDTH / 2
-		self.rect.center = self.pos
+		
+		self.rect.midbottom = self.pos
 
+	def jump(self):
+		hits = pg.sprite.spritecollide(self, self.game.platforms, False)
+		if hits:
+			self.vel.y = -5
+		
+		
 class Platform(pg.sprite.Sprite):
-	def __init__(self, x, y, w, h):
+	def __init__(self, x, y):
 		pg.sprite.Sprite.__init__(self)
-		self.image = pg.Surface((w, h))
-		self.image.fill(BLUE)
+		self.image = pg.image.load("./images/platform.png")
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y

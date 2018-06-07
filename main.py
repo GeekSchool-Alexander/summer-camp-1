@@ -18,7 +18,7 @@ class Game:
 			p = Platform(*plat)
 			self.all_sprites.add(p)
 			self.platforms.add(p)
-		self.player = Player()
+		self.player = Player(self)
 		self.all_sprites.add(self.player)
 		self.run()
 	
@@ -39,8 +39,16 @@ class Game:
 				if event.key == pg.K_ESCAPE:
 					self.running = False
 					self.playing = False
-					
+
+				
+				
 	def update(self):
+		if self.player.vel.y > 0:
+			hits = pg.sprite.spritecollide(self.player, self.platforms, False)
+			if hits:
+				self.player.pos.y = hits[0].rect.top
+				self.player.vel.y = 0
+			
 		self.all_sprites.update()
 
 	def draw(self):
