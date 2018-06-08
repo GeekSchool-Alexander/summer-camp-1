@@ -1,6 +1,7 @@
 import pygame as pg
 from settings import *
 from sprites import *
+from levels import *
 
 
 class Game:
@@ -14,11 +15,12 @@ class Game:
 	def new(self):
 		self.all_sprites = pg.sprite.Group()
 		self.platforms = pg.sprite.Group()
-		for plat in PLATFORM_LIST:
-			p = Platform(*plat)
+		plt_conf, plr_conf = self.create_level(level1)
+		for plt in plt_conf:
+			p = Platform(*plt)
 			self.all_sprites.add(p)
 			self.platforms.add(p)
-		self.player = Player(self)
+		self.player = Player(self, plr_conf.x, plr_conf.y)
 		self.all_sprites.add(self.player)
 		self.run()
 	
@@ -40,8 +42,6 @@ class Game:
 					self.running = False
 					self.playing = False
 
-				
-				
 	def update(self):
 		if self.player.vel.y > 0:
 			hits = pg.sprite.spritecollide(self.player, self.platforms, False)
@@ -56,9 +56,27 @@ class Game:
 		self.all_sprites.draw(self.screen)
 		pg.display.flip()
 
+	def create_level(self, lvl):
+		x = y = 0
+		config = []
+		start = Vec2d(0, 0) ###
+		for row in lvl:
+			for cell in row:
+				if cell == "o": ###
+					start = Vec2d(x, y) ###
+				if cell == "-":
+					config.append((x, y))
+				x += PLATFORM_WIDTH
+			y += PLATFORM_HEIGHT
+			x = 0
+		return tuple(config), Vec2d(start) ###
+
 	def __del__(self):
 		pg.quit()
 
+	
+		
+		
 	def show_start_screen(self):
 		pass
 	

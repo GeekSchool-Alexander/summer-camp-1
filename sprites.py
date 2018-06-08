@@ -4,11 +4,11 @@ from settings import *
 
 
 class Player(pg.sprite.Sprite):
-	def __init__(self, game):
+	def __init__(self, game, x, y):
 		pg.sprite.Sprite.__init__(self)
 		self.image = pg.image.load("./images/ball.png")
 		self.rect = self.image.get_rect()
-		self.rect.center = (WIDHT/2, 0)
+		self.rect.center = (x, y)
 		self.pos = Vec2d(self.rect.center)
 		self.vel = Vec2d(0, 0)
 		self.acc = Vec2d(0, 0)
@@ -34,6 +34,9 @@ class Player(pg.sprite.Sprite):
 			self.pos.x = WIDHT - PLAYER_WIDTH / 2
 		if self.pos.x - PLAYER_WIDTH / 2 < 0:
 			self.pos.x = PLAYER_WIDTH / 2
+		if self.pos.y - PLAYER_HEIGHT < 0:
+			self.pos.y = PLAYER_HEIGHT
+			self.vel.y = 0
 		
 		self.rect.midbottom = self.pos
 
