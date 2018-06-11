@@ -41,42 +41,39 @@ class Game:
 				if event.key == pg.K_ESCAPE:
 					self.running = False
 					self.playing = False
-
+	
 	def update(self):
 		if self.player.vel.y > 0:
 			hits = pg.sprite.spritecollide(self.player, self.platforms, False)
 			if hits:
 				self.player.pos.y = hits[0].rect.top
 				self.player.vel.y = 0
-			
+		
 		self.all_sprites.update()
-
+	
 	def draw(self):
 		self.screen.fill(BLACK)
 		self.all_sprites.draw(self.screen)
 		pg.display.flip()
-
+	
 	def create_level(self, lvl):
 		x = y = 0
 		config = []
-		start = Vec2d(0, 0) ###
+		start = Vec2d(0, 0)  ###
 		for row in lvl:
 			for cell in row:
-				if cell == "o": ###
-					start = Vec2d(x, y) ###
+				if cell == "o":  ###
+					start = Vec2d(x, y)  ###
 				if cell == "-":
 					config.append((x, y))
 				x += PLATFORM_WIDTH
 			y += PLATFORM_HEIGHT
 			x = 0
-		return tuple(config), Vec2d(start) ###
-
+		return tuple(config), start  ###
+	
 	def __del__(self):
 		pg.quit()
-
 	
-		
-		
 	def show_start_screen(self):
 		pass
 	
