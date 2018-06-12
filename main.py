@@ -10,6 +10,7 @@ class Game:
 		pg.display.set_caption("GeekSchool Platformer")
 		self.screen = pg.display.set_mode(WINDOW_SIZE)
 		self.clock = pg.time.Clock()
+		self.background = pg.image.load("./images/background.jpg")
 		self.running = True
 	
 	def new(self):
@@ -46,13 +47,16 @@ class Game:
 		if self.player.vel.y > 0:
 			hits = pg.sprite.spritecollide(self.player, self.platforms, False)
 			if hits:
-				self.player.pos.y = hits[0].rect.top
-				self.player.vel.y = 0
+				platform = hits[0]
+				sides = {"top":pg.Rect(platform.rect.left, platform.rect.top, PLATFORM_WIDTH, 1),
+				         "bottom":pg.Rect(platform.rect.left, platform.rect.bottom, PLATFORM_WIDTH, 1)}
+				pass
 		
 		self.all_sprites.update()
 	
 	def draw(self):
-		self.screen.fill(BLACK)
+		#self.screen.fill(BLACK)
+		self.screen.blit(self.background, (0, 0))
 		self.all_sprites.draw(self.screen)
 		pg.display.flip()
 	
