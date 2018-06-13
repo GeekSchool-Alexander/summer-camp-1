@@ -16,8 +16,6 @@ class Player(pg.sprite.Sprite):
 		self.current_frame = 0
 		self.image = self.frames[self.current_frame]
 		self.last_update = pg.time.get_ticks()
-		
-		
 		self.rect = self.image.get_rect()
 		self.rect.center = (x, y)
 		self.pos = Vec2d(self.rect.center)

@@ -45,25 +45,34 @@ class Game:
 	
 	def update(self):
 		self.player.on_ground = False
+		empty_spaces = 4
 		for platform in self.platforms:
-			sides = {"top":pg.Rect(platform.rect.left, platform.rect.top, PLATFORM_WIDTH, 1),
-				    "bottom":pg.Rect(platform.rect.left, platform.rect.bottom, PLATFORM_WIDTH, 1)}
+			sides = {"top":pg.Rect(platform.rect.left + empty_spaces, platform.rect.top, PLATFORM_WIDTH - empty_spaces, 1),
+				    "bottom":pg.Rect(platform.rect.left + empty_spaces, platform.rect.bottom, PLATFORM_WIDTH - empty_spaces, 1),
+				    "right": pg.Rect(platform.rect.right, platform.rect.top + empty_spaces, 1, PLATFORM_HEIGHT - empty_spaces),
+				    "left": pg.Rect(platform.rect.left, platform.rect.top + empty_spaces, 1, PLATFORM_HEIGHT - empty_spaces)}
 			collisions = set()
 			for side, plat_rect in sides.items():
-					if self.player.rect.colliderect(plat_rect):
-						collisions.add(side)
-				
-				if "top" in collisions:
-					self.player.vel.y = 0
-					self.player.pos.y = sides["top"].top
-					self.player.on_ground = True
-				elif "bottom" in collisions:
-					self.player.vel.y = 0
-					self.player.pos.y = sides["bottom"].bottom + PLAYER_HEIGHT
+				if self.player.rect.colliderect(plat_rect):
+					collisions.add(side)
+			# collide processing
+			if "top" in collisions:
+				self.player.vel.y = 0
+				self.player.pos.y = sides["top"].top
+				self.player.on_ground = True
+			if "bottom" in collisions:
+				self.player.vel.y = 0
+				self.player.pos.y = sides["bottom"].bottom + PLAYER_HEIGHT
+			if "left" in collisions:
+				self.player.vel.x = 0
+				self.player.pos.x = sides["left"].left - PLAYER_WIDTH/2
+			if "right" in collisions:
+				self.player.vel.x = 0
+				self.player.pos.x = sides["right"].right + PLAYER_WIDTH/2
+		
 		self.all_sprites.update()
 	
 	def draw(self):
-		#self.screen.fill(BLACK)
 		self.screen.blit(self.background, (0, 0))
 		self.all_sprites.draw(self.screen)
 		pg.display.flip()
@@ -71,17 +80,17 @@ class Game:
 	def create_level(self, lvl):
 		x = y = 0
 		config = []
-		start = Vec2d(0, 0)  ###
+		start = Vec2d(0, 0)
 		for row in lvl:
 			for cell in row:
-				if cell == "o":  ###
-					start = Vec2d(x, y)  ###
+				if cell == "o":
+					start = Vec2d(x, y)
 				if cell == "-":
 					config.append((x, y))
 				x += PLATFORM_WIDTH
 			y += PLATFORM_HEIGHT
 			x = 0
-		return tuple(config), start  ###
+		return tuple(config), start
 	
 	def __del__(self):
 		pg.quit()
