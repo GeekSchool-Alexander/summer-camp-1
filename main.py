@@ -49,18 +49,17 @@ class Game:
 			sides = {"top":pg.Rect(platform.rect.left, platform.rect.top, PLATFORM_WIDTH, 1),
 				    "bottom":pg.Rect(platform.rect.left, platform.rect.bottom, PLATFORM_WIDTH, 1)}
 			collisions = set()
-			for side, rect in sides.items():
-				if self.player.rect.colliderect(rect):
-					collisions.add(side)
-			print(collisions)
-			if "top" in collisions:
-				self.player.vel.y = 0
-				self.player.pos.y = sides["top"].top
-				self.player.on_ground = True
-			if "bottom" in collisions:
-				self.player.vel.y = 0
-				self.player.pos.y = sides["bottom"].bottom + PLAYER_HEIGHT
-		
+			for side, plat_rect in sides.items():
+					if self.player.rect.colliderect(plat_rect):
+						collisions.add(side)
+				
+				if "top" in collisions:
+					self.player.vel.y = 0
+					self.player.pos.y = sides["top"].top
+					self.player.on_ground = True
+				elif "bottom" in collisions:
+					self.player.vel.y = 0
+					self.player.pos.y = sides["bottom"].bottom + PLAYER_HEIGHT
 		self.all_sprites.update()
 	
 	def draw(self):
