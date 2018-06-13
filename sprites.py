@@ -24,6 +24,7 @@ class Player(pg.sprite.Sprite):
 		self.vel = Vec2d(0, 0)
 		self.acc = Vec2d(0, 0)
 		self.game = game
+		self.on_ground = False
 	
 	def update(self):
 		
@@ -57,8 +58,7 @@ class Player(pg.sprite.Sprite):
 		self.animate()
 	
 	def jump(self):
-		hits = pg.sprite.spritecollide(self, self.game.platforms, False)
-		if hits:
+		if self.on_ground:
 			self.vel.y = -5
 
 	def animate(self):
