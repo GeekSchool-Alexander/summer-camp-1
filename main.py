@@ -44,13 +44,22 @@ class Game:
 					self.playing = False
 	
 	def update(self):
-		if self.player.vel.y > 0:
-			hits = pg.sprite.spritecollide(self.player, self.platforms, False)
-			if hits:
-				platform = hits[0]
-				sides = {"top":pg.Rect(platform.rect.left, platform.rect.top, PLATFORM_WIDTH, 1),
-				         "bottom":pg.Rect(platform.rect.left, platform.rect.bottom, PLATFORM_WIDTH, 1)}
-				pass
+		self.player.on_ground = False
+		for platform in self.platforms:
+			sides = {"top":pg.Rect(platform.rect.left, platform.rect.top, PLATFORM_WIDTH, 1),
+				    "bottom":pg.Rect(platform.rect.left, platform.rect.bottom, PLATFORM_WIDTH, 1)}
+			collisions = set()
+			for side, rect in sides.items():
+				if self.player.rect.colliderect(rect):
+					collisions.add(side)
+			print(collisions)
+			if "top" in collisions:
+				self.player.vel.y = 0
+				self.player.pos.y = sides["top"].top
+				self.player.on_ground = True
+			if "bottom" in collisions:
+				self.player.vel.y = 0
+				self.player.pos.y = sides["bottom"].bottom + PLAYER_HEIGHT
 		
 		self.all_sprites.update()
 	
