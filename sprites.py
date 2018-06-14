@@ -1,4 +1,5 @@
 import pygame as pg
+
 from VectorClass import Vec2d
 from settings import *
 
@@ -82,8 +83,9 @@ class Player(pg.sprite.Sprite):
 				self.image = self.frames[self.current_frame]
 				
 	def collides(self):
+		# collision with platforms
 		self.on_ground = False
-		empty_spaces = 4
+		empty_spaces = 1
 		for platform in self.game.platforms:
 			sides = {"top": pg.Rect(platform.rect.left + empty_spaces, platform.rect.top, PLATFORM_WIDTH - empty_spaces, 1),
 				"bottom": pg.Rect(platform.rect.left + empty_spaces, platform.rect.bottom, PLATFORM_WIDTH - empty_spaces, 1),
@@ -94,19 +96,25 @@ class Player(pg.sprite.Sprite):
 				if self.rect.colliderect(plat_rect):
 					collisions.add(side)
 			# collide processing
-			if "top" in collisions:
-				self.vel.y = 0
-				self.pos.y = sides["top"].top
-				self.on_ground = True
-			if "bottom" in collisions:
-				self.vel.y = 0
-				self.pos.y = sides["bottom"].bottom + PLAYER_HEIGHT
-			if "left" in collisions:
-				self.vel.x = 0
-				self.pos.x = sides["left"].left - PLAYER_WIDTH / 2
-			if "right" in collisions:
-				self.vel.x = 0
-				self.pos.x = sides["right"].right + PLAYER_WIDTH / 2
+			if platform.rect.top < self.rect.centery < platform.rect.bottom:
+				if "left" in collisions:
+					self.vel.x = 0
+					self.pos.x = sides["left"].left - PLAYER_WIDTH / 2
+				if "right" in collisions:
+					self.vel.x = 0
+					self.pos.x = sides["right"].right + PLAYER_WIDTH / 2
+			else:
+				if "top" in collisions:
+					self.vel.y = 0
+					self.pos.y = sides["top"].top
+					self.on_ground = True
+				if "bottom" in collisions:
+					self.vel.y = 0
+					self.pos.y = sides["bottom"].bottom + PLAYER_HEIGHT
+		
+		# collision with saws
+		if pg.sprite.spritecollide(self, self.game.saws, False):
+			pass
 
 
 class Saw(pg.sprite.Sprite):
