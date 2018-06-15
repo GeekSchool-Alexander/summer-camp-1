@@ -114,7 +114,7 @@ class Player(pg.sprite.Sprite):
 		
 		# collision with saws
 		if pg.sprite.spritecollide(self, self.game.saws, False):
-			pass
+			self.game.playing = False
 
 
 class Saw(pg.sprite.Sprite):
